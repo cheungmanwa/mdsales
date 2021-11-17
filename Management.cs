@@ -146,8 +146,16 @@ namespace mdsales
 
                 // update the records in database
                 con.Open();
-                sql = "update product set category='" + category + "',title='" + title + "',price=" + price + " where id="+id;
-                da.UpdateCommand = new OleDbCommand(sql, con);
+
+                cmd = new OleDbCommand(sql, con);
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "UPDATE product SET category = @category, title = @title, price = @price WHERE [ID] = @id";
+                cmd.Parameters.AddWithValue("@category", category);
+                cmd.Parameters.AddWithValue("@title", title);
+                cmd.Parameters.AddWithValue("@price", price);
+                cmd.Parameters.AddWithValue("@id", int.Parse(id));
+
+                da.UpdateCommand = cmd;
                 if (da.UpdateCommand.ExecuteNonQuery() > 0)
                 {
                     MessageBox.Show("Update successful.");
@@ -167,8 +175,15 @@ namespace mdsales
 
             // add records to database
             con.Open();
-            sql = "insert into product(category,title,price) values('" + category + "','" + title + "'," + price + ")";
-            da.InsertCommand = new OleDbCommand(sql,con);
+
+            cmd = new OleDbCommand(sql, con);
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "insert into product(category,title,price) values (@category, @title, @price)";
+            cmd.Parameters.AddWithValue("@category", category);
+            cmd.Parameters.AddWithValue("@title", title);
+            cmd.Parameters.AddWithValue("@price", price);
+
+            da.InsertCommand = cmd;
             if(da.InsertCommand.ExecuteNonQuery() > 0)
             {
                 MessageBox.Show("Create successful.");
