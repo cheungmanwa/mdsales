@@ -29,7 +29,7 @@ namespace mdsales
         {
             // Set default discount
             discount.SelectedText = "100";
-            sql = "SELECT title, price FROM product";
+            sql = "SELECT title, price, category FROM product";
             load_data(sql, listView1);
         }
 
@@ -48,6 +48,7 @@ namespace mdsales
                 da.SelectCommand = cmd;
                 da.Fill(dt);
 
+
                 lst.Columns.Clear();
                 foreach (DataColumn c in dt.Columns)
                 {
@@ -55,15 +56,40 @@ namespace mdsales
                 }
 
                 lst.Items.Clear();
+
+
+                var cate_list = new List<string>();
                 foreach (DataRow r in dt.Rows)
                 {
-                    ListViewItem item = new ListViewItem(r[0].ToString());
-                    for (int i = 1; i < dt.Columns.Count; i++)
+                    var category = r[2].ToString();
+                    if (cate_list.Contains(category) == false)
                     {
-                        item.SubItems.Add(r[i].ToString());
+                        cate_list.Add(category);
                     }
+                }
+
+                // Adds groups that has a left-aligned header
+                foreach (string c in cate_list)
+                {
+                    var group = new ListViewGroup(c,
+                        HorizontalAlignment.Left);
+                    lst.Groups.Add(group);
+                }
+
+                foreach (DataRow r in dt.Rows)
+                {
+                    var category = r[2].ToString();
+                    ListViewItem item = new ListViewItem(r[0].ToString());
+                    item.SubItems.Add(r[1].ToString());
+                    item.SubItems.Add(r[2].ToString());
+
+                    //assign items to groups 
+                    int idx = cate_list.IndexOf(category);
+                    item.Group = lst.Groups[idx];
+
                     lst.Items.Add(item);
                 }
+
             }
             catch (Exception ex)
             {
@@ -110,6 +136,7 @@ namespace mdsales
                 var price = dt.Rows[idx].ItemArray[1].ToString();
 
                 dataGridView1.Rows.Add(title, "1", price);
+                //dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
                 GetTotal();
             }
         }
@@ -143,9 +170,13 @@ namespace mdsales
                 chan = c - t;
 
 
-                if (chan >= 0)
+                if (chan > 0)
                 {
                     change.Text = chan.ToString();
+                }
+                else if (chan == 0)
+                {
+                    MessageBox.Show("Payment Completed", "Success");
                 }
                 else
                 {
@@ -169,7 +200,7 @@ namespace mdsales
             }
             else if (b.Text == ".")
             {
-                if (! cost.Text.Contains("."))
+                if (!cost.Text.Contains("."))
                 {
                     cost.Text = cost.Text + b.Text;
                 }
@@ -187,11 +218,19 @@ namespace mdsales
 
         private void btnRemoveItem_Click(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow row in this.dataGridView1.SelectedRows)
+            try
             {
-                dataGridView1.Rows.Remove(row);
+                foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+                {
+                    dataGridView1.Rows.Remove(row);
+                }
+                GetTotal();
+                dataGridView1.Refresh();
             }
-            GetTotal();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnMgm_Click(object sender, EventArgs e)
