@@ -76,6 +76,7 @@ namespace mdsales
                     lst.Groups.Add(group);
                 }
 
+
                 foreach (DataRow r in dt.Rows)
                 {
                     var category = r[2].ToString();
@@ -170,13 +171,9 @@ namespace mdsales
                 chan = c - t;
 
 
-                if (chan > 0)
+                if (chan >= 0)
                 {
                     change.Text = chan.ToString();
-                }
-                else if (chan == 0)
-                {
-                    MessageBox.Show("Payment Completed", "Success");
                 }
                 else
                 {
