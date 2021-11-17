@@ -16,7 +16,8 @@ namespace mdsales
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Management());
+            // Application.Run(new Management());
+            Application.Run(new Sales());
         }
     }
 }
