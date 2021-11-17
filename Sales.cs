@@ -27,7 +27,9 @@ namespace mdsales
 
         private void Sales_Load(object sender, EventArgs e)
         {
-            sql = "SELECT * FROM product";
+            // Set default discount
+            discount.SelectedText = "100";
+            sql = "SELECT title, price FROM product";
             load_data(sql, listView1);
         }
 
@@ -35,7 +37,6 @@ namespace mdsales
         {
             try
             {
-
                 con.Open();
 
                 cmd = new OleDbCommand();
@@ -53,7 +54,6 @@ namespace mdsales
                     lst.Columns.Add(c.ColumnName);
                 }
 
-
                 lst.Items.Clear();
                 foreach (DataRow r in dt.Rows)
                 {
@@ -64,7 +64,6 @@ namespace mdsales
                     }
                     lst.Items.Add(item);
                 }
-
             }
             catch (Exception ex)
             {
@@ -86,27 +85,21 @@ namespace mdsales
             {
                 sum = sum + Convert.ToDouble(dataGridView1.Rows[i].Cells[2].Value);
             }
+            subTotal.Text = sum.ToString();
             return sum;
         }
 
-        private void AddDiscount()
+        private void GetTotal()
         {
-            Double discount, totalSum;
-            discount = 10;
+            Double dis, totalSum;
+            dis = Convert.ToDouble(discount.Text);
 
             if (dataGridView1.Rows.Count > 0)
             {
-                totalSum = cost_of_items() + (1-(1/discount));
+                totalSum = cost_of_items() * dis / 100;
                 total.Text = Convert.ToString(totalSum);
             }
         }
-
-        private void Change()
-        {
-            Double total, cost, change;
-
-        }
-
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -116,6 +109,8 @@ namespace mdsales
                 var title = dt.Rows[idx].ItemArray[0].ToString();
                 var price = dt.Rows[idx].ItemArray[1].ToString();
 
+                dataGridView1.Rows.Add(title, "1", price);
+                GetTotal();
             }
         }
 
@@ -123,11 +118,14 @@ namespace mdsales
         {
             try
             {
+                discount.Text = "100";
                 subTotal.Text = "0";
                 total.Text = "0";
-                discount.Text = "0";
+                cost.Text = "0";
+                change.Text = "0";
                 dataGridView1.Rows.Clear();
                 dataGridView1.Refresh();
+
             }
             catch (Exception ex)
             {
@@ -139,20 +137,19 @@ namespace mdsales
         {
             try
             {
-                
-                if (Convert.ToDouble(change.Text) >= 0)
+                Double c, t, chan;
+                c = Convert.ToDouble(cost.Text);
+                t = Convert.ToDouble(total.Text);
+                chan = c - t;
+
+
+                if (chan >= 0)
                 {
-                    MessageBox.Show("Payment Successful, The amount is " + total.Text + " HKD.", "Payment Successful Message");
-                    subTotal.Text = "0";
-                    total.Text = "0";
-                    discount.Text = "0";
-                    cost.Text = "0";
-                    dataGridView1.Rows.Clear();
-                    dataGridView1.Refresh();
-                } 
+                    change.Text = chan.ToString();
+                }
                 else
                 {
-                    MessageBox.Show("Wrong Change or cost", "Payment Fail Message");
+                    MessageBox.Show("Wrong Cost", "Payment Fail Message");
                 }
             }
             catch (Exception ex)
@@ -190,32 +187,11 @@ namespace mdsales
 
         private void btnRemoveItem_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void discount_Click(object sender, EventArgs e)
-        {
-
+            foreach (DataGridViewRow row in this.dataGridView1.SelectedRows)
+            {
+                dataGridView1.Rows.Remove(row);
+            }
+            GetTotal();
         }
 
         private void btnMgm_Click(object sender, EventArgs e)
@@ -234,6 +210,11 @@ namespace mdsales
         private void btnSales_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void discount_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            GetTotal();
         }
     }
 }

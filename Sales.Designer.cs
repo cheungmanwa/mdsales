@@ -30,7 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sales));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.btnMgm = new System.Windows.Forms.Button();
             this.btnSales = new System.Windows.Forms.Button();
@@ -62,10 +63,11 @@
             this.labelCost = new System.Windows.Forms.Label();
             this.cost = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.button15 = new System.Windows.Forms.Button();
+            this.removeItem = new System.Windows.Forms.Button();
             this.reset = new System.Windows.Forms.Button();
             this.pay = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.discount = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.subTotal = new System.Windows.Forms.Label();
@@ -74,14 +76,11 @@
             this.total = new System.Windows.Forms.Label();
             this.labelDiscount = new System.Windows.Forms.Label();
             this.labelTotal = new System.Windows.Forms.Label();
-            this.discount = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.item = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.qty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productBindingSource1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.productDataSet1)).BeginInit();
@@ -186,7 +185,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(187, 225);
             this.panel1.TabIndex = 3;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // resetCost
             // 
@@ -416,7 +414,7 @@
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.Gainsboro;
-            this.panel6.Controls.Add(this.button15);
+            this.panel6.Controls.Add(this.removeItem);
             this.panel6.Controls.Add(this.reset);
             this.panel6.Controls.Add(this.pay);
             this.panel6.Location = new System.Drawing.Point(481, 6);
@@ -424,17 +422,17 @@
             this.panel6.Size = new System.Drawing.Size(201, 86);
             this.panel6.TabIndex = 7;
             // 
-            // button15
+            // removeItem
             // 
-            this.button15.BackColor = System.Drawing.Color.White;
-            this.button15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button15.Location = new System.Drawing.Point(87, 3);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(108, 36);
-            this.button15.TabIndex = 2;
-            this.button15.Text = "Remove Item";
-            this.button15.UseVisualStyleBackColor = false;
-            this.button15.Click += new System.EventHandler(this.btnRemoveItem_Click);
+            this.removeItem.BackColor = System.Drawing.Color.White;
+            this.removeItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.removeItem.Location = new System.Drawing.Point(87, 3);
+            this.removeItem.Name = "removeItem";
+            this.removeItem.Size = new System.Drawing.Size(108, 36);
+            this.removeItem.TabIndex = 2;
+            this.removeItem.Text = "Remove Item";
+            this.removeItem.UseVisualStyleBackColor = false;
+            this.removeItem.Click += new System.EventHandler(this.btnRemoveItem_Click);
             // 
             // reset
             // 
@@ -464,6 +462,7 @@
             // 
             this.panel4.AutoScroll = true;
             this.panel4.BackColor = System.Drawing.Color.Gainsboro;
+            this.panel4.Controls.Add(this.discount);
             this.panel4.Controls.Add(this.label3);
             this.panel4.Controls.Add(this.label2);
             this.panel4.Controls.Add(this.subTotal);
@@ -472,11 +471,31 @@
             this.panel4.Controls.Add(this.total);
             this.panel4.Controls.Add(this.labelDiscount);
             this.panel4.Controls.Add(this.labelTotal);
-            this.panel4.Controls.Add(this.discount);
             this.panel4.Location = new System.Drawing.Point(10, 6);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(226, 86);
             this.panel4.TabIndex = 0;
+            // 
+            // discount
+            // 
+            this.discount.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.discount.FormattingEnabled = true;
+            this.discount.Items.AddRange(new object[] {
+            "100",
+            "90",
+            "80",
+            "70",
+            "60",
+            "50",
+            "40",
+            "30",
+            "20",
+            "10"});
+            this.discount.Location = new System.Drawing.Point(83, 2);
+            this.discount.Name = "discount";
+            this.discount.Size = new System.Drawing.Size(92, 26);
+            this.discount.TabIndex = 9;
+            this.discount.SelectedIndexChanged += new System.EventHandler(this.discount_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -530,7 +549,6 @@
             this.labelSub.Size = new System.Drawing.Size(47, 24);
             this.labelSub.TabIndex = 1;
             this.labelSub.Text = "Sub";
-            this.labelSub.Click += new System.EventHandler(this.label3_Click);
             // 
             // total
             // 
@@ -545,7 +563,6 @@
             this.total.TabIndex = 5;
             this.total.Text = "0";
             this.total.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.total.Click += new System.EventHandler(this.label7_Click);
             // 
             // labelDiscount
             // 
@@ -556,7 +573,6 @@
             this.labelDiscount.Size = new System.Drawing.Size(45, 24);
             this.labelDiscount.TabIndex = 0;
             this.labelDiscount.Text = "Dis.";
-            this.labelDiscount.Click += new System.EventHandler(this.label2_Click);
             // 
             // labelTotal
             // 
@@ -568,25 +584,10 @@
             this.labelTotal.TabIndex = 2;
             this.labelTotal.Text = "Total";
             // 
-            // discount
-            // 
-            this.discount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.discount.BackColor = System.Drawing.Color.White;
-            this.discount.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.discount.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.discount.Location = new System.Drawing.Point(83, 3);
-            this.discount.Name = "discount";
-            this.discount.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.discount.Size = new System.Drawing.Size(92, 24);
-            this.discount.TabIndex = 3;
-            this.discount.Text = "0";
-            this.discount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.discount.Click += new System.EventHandler(this.discount_Click);
-            // 
             // dataGridView1
             // 
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
@@ -596,6 +597,14 @@
             this.item,
             this.qty,
             this.amount});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.Location = new System.Drawing.Point(205, 75);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 24;
@@ -619,17 +628,20 @@
             // 
             // listView1
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.listView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listView1.AllowColumnReorder = true;
+            this.listView1.BackColor = System.Drawing.SystemColors.Menu;
+            this.listView1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.listView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listView1.ForeColor = System.Drawing.SystemColors.MenuText;
+            this.listView1.FullRowSelect = true;
+            this.listView1.GridLines = true;
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(516, 75);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(194, 225);
             this.listView1.TabIndex = 5;
             this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.View = System.Windows.Forms.View.Tile;
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
             // 
             // Sales
@@ -703,17 +715,13 @@
         private System.Windows.Forms.Label labelDiscount;
         private System.Windows.Forms.Label total;
         private System.Windows.Forms.Label subTotal;
-        private System.Windows.Forms.Label discount;
         private System.Windows.Forms.Label labelTotal;
         private System.Windows.Forms.Label labelSub;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Button pay;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button removeItem;
         private System.Windows.Forms.Button reset;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Panel panel2;
@@ -723,6 +731,8 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label change;
+        private System.Windows.Forms.ComboBox discount;
+        private System.Windows.Forms.Label label2;
     }
 }
 
