@@ -64,7 +64,7 @@ namespace mdsales
                     ListViewItem item = new ListViewItem(r[1].ToString());
                     for (int i = 2; i < dt.Columns.Count; i++)
                     {
-                        item.SubItems.Add(r[i]+"");
+                        item.SubItems.Add(r[i] + "");
                     }
                     lst.Items.Add(item);
                 }
@@ -165,6 +165,10 @@ namespace mdsales
                 // refresh
                 Management_Load(sender, e);
             }
+            else
+            {
+                MessageBox.Show("Please select item.");
+            }
         }
 
         private void btnCreate_Click(object sender, EventArgs e)
@@ -172,6 +176,12 @@ namespace mdsales
             var category = tbCategory.Text.ToString();
             var title = tbTitle.Text.ToString();
             var price = tbPrice.Text.ToString();
+
+            if (category == "" || title == "" || price == "")
+            {
+                MessageBox.Show("Title / Category / Price cannot empty.");
+                return;
+            }
 
             // add records to database
             con.Open();
@@ -184,33 +194,42 @@ namespace mdsales
             cmd.Parameters.AddWithValue("@price", price);
 
             da.InsertCommand = cmd;
-            if(da.InsertCommand.ExecuteNonQuery() > 0)
+            if (da.InsertCommand.ExecuteNonQuery() > 0)
             {
                 MessageBox.Show("Create successful.");
             }
             con.Close();
 
             // refresh
-            Management_Load(sender,e);
+            Management_Load(sender, e);
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
             var id = product_id.Text.ToString();
-
-            // delete records in database
-            con.Open();
-            sql = "delete * from product where id=" + id;
-            da.DeleteCommand = new OleDbCommand(sql, con);
-            if (da.DeleteCommand.ExecuteNonQuery() > 0)
+            if (id == "")
             {
-                MessageBox.Show("Delete successful.");
+                MessageBox.Show("Please select item.");
+                return;
             }
-            con.Close();
 
-            // refresh
-            Management_Load(sender, e);
-            reset_input();
+            var result = MessageBox.Show("Are you confirm to delete " + tbTitle.Text + " ?", "Delete?", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                // delete records in database
+                con.Open();
+                sql = "delete * from product where id=" + id;
+                da.DeleteCommand = new OleDbCommand(sql, con);
+                if (da.DeleteCommand.ExecuteNonQuery() > 0)
+                {
+                    MessageBox.Show("Delete successful.");
+                }
+                con.Close();
+
+                // refresh
+                Management_Load(sender, e);
+                reset_input();
+            }
         }
     }
 }
